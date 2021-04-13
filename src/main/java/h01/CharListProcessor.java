@@ -147,5 +147,39 @@ public class CharListProcessor {
     return list;
   }
 
+  public static ListItem<ListItem<Character>> reverseListOfListsInPlaceRecursively(ListItem<ListItem<Character>> listOfLists) {
+    if (listOfLists.next == null)
+      return listOfLists;
+
+    ListItem<ListItem<Character>> result = reverseListOfListsInPlaceRecursively(listOfLists.next);
+    listOfLists.next = null;
+    getLastElementListOfList(result).next = listOfLists;
+
+    return result;
+  }
+
+  private static ListItem<ListItem<Character>> getLastElementListOfList(ListItem<ListItem<Character>> listOfList) {
+    if (listOfList.next == null)
+      return listOfList;
+    return getLastElementListOfList(listOfList.next);
+  }
+
+  public static ListItem<Character> reverseListInPlaceRecursively(ListItem<Character> list) {
+    if (list.next == null)
+      return list;
+
+    ListItem<Character> result =  reverseListInPlaceRecursively(list.next);
+    list.next = null;
+    getLastElementList(result).next = list;
+
+    return result;
+  }
+
+  private static ListItem<Character> getLastElementList(ListItem<Character> list) {
+    if (list.next == null)
+      return list;
+      return getLastElementList(list.next);
+  }
+
 
 }

@@ -27,16 +27,15 @@ public class ExampleJUnitTest {
 //      e.printStackTrace();
 //    }
 
-    ValidCharacterTest validCharacterTest = new ValidCharacterTest();
-    try {
-      assertEquals(CharListProcessor.makeListOfListsAsCopy(listItemListResult1(), validCharacterTest), listItemList1());
-    } catch (ListOfListsException e) {
-      e.printStackTrace();
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+//    ValidCharacterTest validCharacterTest = new ValidCharacterTest();
+//    try {
+//      assertEquals(CharListProcessor.makeListOfListsAsCopy(listItemListResult1(), validCharacterTest), listItemList1());
+//    } catch (ListOfListsException e) {
+//      e.printStackTrace();
+//    } catch (Exception e) {
+//      e.printStackTrace();
+//    }
 
-    CharListProcessor.reverseListOfListsInPlaceIteratively(listItemList1());
   }
 
 
@@ -49,7 +48,7 @@ public class ExampleJUnitTest {
         new ListItem<>(
           null,
           new ListItem<>(
-            new ListItem<>('a', new ListItem<>('b', new ListItem<>('a', null))),
+            new ListItem<>('1', new ListItem<>('2', new ListItem<>('3', null))),
             null
           )
         )
