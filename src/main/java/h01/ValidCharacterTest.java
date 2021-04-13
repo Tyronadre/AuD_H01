@@ -6,9 +6,7 @@ public class ValidCharacterTest implements PredicateWithException<Character> {
   public boolean test(Character character, int i, int j) throws ListOfListsException {
     if (character == null)
       throw new ListOfListsException(i, j, true);
-    if (character.equals('&'))
-      return true;
-    return false;
+    return character.equals('&');
   }
 
 

@@ -59,35 +59,65 @@ public class CharListProcessor {
     ListItem<Character> innerTail = null;
     int outerCounter = 0;
     int innerCounter = 0;
-    for (ListItem<Character> item = list; item.next != null; item = item.next) {
-      if (pred.test(item.key, outerCounter, innerCounter)) {
-        if (innerTail == null)
-          innerTail = new ListItem<>();
-        else innerTail.next = null;
+    while (list.next != null) {
+      if (pred.test(list.next.key, outerCounter, innerCounter)) {
+        var temp = list.next;
+        list.next = null;
+        //wenn zwei leere am ende fehler!
+        if (temp.next == null)
+          break;
+        else if (pred.test(temp.next.key, outerCounter + 1, 0)) {
+          outerCounter++;
+          outerTail = outerTail.next = new ListItem<>();
+          temp = temp.next;
+        }
+        list = temp.next;
         outerTail = outerTail.next = new ListItem<>();
-        innerTail = outerTail.key;
+        innerTail = null;
         outerCounter++;
+        innerCounter = 0;
+
       }
-      innerTail = innerTail.next = item;
+      if (innerTail == null) {
+        outerTail.key = innerTail = list;
+      } else
+        innerTail = innerTail.next = list;
       innerCounter++;
+      list = list.next;
+      if (list == null) break;
     }
     return outerHead;
   }
 
-  public static ListItem<ListItem<Character>> makeListOfListsAsCopy(ListItem<Character> list, PredicateWithException<Character> pred) throws Exception {
+  public static ListItem<ListItem<Character>> makeListOfListsAsCopy(ListItem<Character> lst, PredicateWithException<Character> pred) throws Exception {
+    var list = lst;
     ListItem<ListItem<Character>> outerHead = new ListItem<>();
-    ListItem<Character> innerHead = null;
-    outerHead.key = null;
+    ListItem<ListItem<Character>> outerTail = outerHead;
+    ListItem<Character> innerTail = null;
     int outerCounter = 0;
     int innerCounter = 0;
-    for (ListItem<Character> item = list; item.next != null; item = item.next) {
-      if (pred.test(item.key, outerCounter, innerCounter)) {
-        innerHead.next = null;
-        outerHead.next = new ListItem<>();
+    while (list != null) {
+      if (pred.test(list.key, outerCounter, innerCounter)) {
+        outerTail = outerTail.next = new ListItem<>();
+        innerTail = null;
+        innerCounter = 0;
         outerCounter++;
+        list = list.next;
+        if (list.next == null)
+          break;
+        else if (pred.test(list.key, outerCounter + 1, 0)) {
+          outerCounter++;
+          outerTail = outerTail.next = new ListItem<>();
+          list = list.next;
+        }
       }
-      innerHead = innerHead.next = new ListItem<>(item.key, item.next);
+      if (innerTail == null) {
+        outerTail.key = innerTail = new ListItem<>(list.key, null);
+      } else
+        innerTail = innerTail.next = new ListItem<>(list.key,null);
       innerCounter++;
+      list = list.next;
+      if (list == null) break;
     }
     return outerHead;
   }

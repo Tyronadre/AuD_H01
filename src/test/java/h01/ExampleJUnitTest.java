@@ -29,7 +29,7 @@ public class ExampleJUnitTest {
 
     ValidCharacterTest validCharacterTest = new ValidCharacterTest();
     try {
-      assertEquals(CharListProcessor.makeListOfListsInPlace(listItemListResult1(), validCharacterTest), listItemList1());
+      assertEquals(CharListProcessor.makeListOfListsAsCopy(listItemListResult1(), validCharacterTest), listItemList1());
     } catch (ListOfListsException e) {
       e.printStackTrace();
     } catch (Exception e) {
