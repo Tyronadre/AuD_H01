@@ -17,7 +17,8 @@ repositories {
 }
 
 dependencies {
-  // JUnit only available in "test" source set (./src/test)
+  implementation("org.jetbrains:annotations:20.1.0")
+    // JUnit only available in "test" source set (./src/test)
   testImplementation("org.junit.jupiter:junit-jupiter:5.7.1")
 }
 

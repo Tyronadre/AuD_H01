@@ -1,5 +1,8 @@
 package h01;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+
 public class CharListProcessor {
 
 
@@ -20,10 +23,12 @@ public class CharListProcessor {
           innerCounter++;
         }
       if (outerItem.next != null) {
+        assert nTail != null;
         nTail = nTail.next = new ListItem<>('&', null);
       }
       outerCounter++;
     }
+    assert nTail != null;
     nTail.next = null;
     return nHead;
   }
@@ -40,13 +45,16 @@ public class CharListProcessor {
             throw new ListOfListsException(outerCounter, innerCounter, true);
           if (innerItem.key.equals('&'))
             throw new ListOfListsException(outerCounter, innerCounter, false);
-          nTail.key = innerItem.key;
-          nTail = nTail.next = new ListItem<>();
+          if (nHead.key != null)
+          nTail = nTail.next = new ListItem<>(innerItem.key,null);
+          else
+            nTail.key = innerItem.key;
           innerCounter++;
         }
-      if (outerItem.next != null)
-        nTail.key = '&';
-      nTail = nTail.next = new ListItem<>();
+      if (outerItem.next != null) {
+        nTail = nTail.next = new ListItem<>('&',null);
+
+      }
       outerCounter++;
     }
     return nHead;
@@ -114,7 +122,7 @@ public class CharListProcessor {
       if (innerTail == null) {
         outerTail.key = innerTail = new ListItem<>(list.key, null);
       } else
-        innerTail = innerTail.next = new ListItem<>(list.key,null);
+        innerTail = innerTail.next = new ListItem<>(list.key, null);
       innerCounter++;
       list = list.next;
       if (list == null) break;
@@ -144,15 +152,17 @@ public class CharListProcessor {
       oTemp2 = lst;
     }
 
-    return list;
+    return oTemp2;
   }
 
+
   public static ListItem<ListItem<Character>> reverseListOfListsInPlaceRecursively(ListItem<ListItem<Character>> listOfLists) {
-    if (listOfLists.next == null)
+    if (listOfLists == null || listOfLists.next == null)
       return listOfLists;
 
     ListItem<ListItem<Character>> result = reverseListOfListsInPlaceRecursively(listOfLists.next);
     listOfLists.next = null;
+    result.key = reverseListInPlaceRecursively(result.key);
     getLastElementListOfList(result).next = listOfLists;
 
     return result;
@@ -168,7 +178,7 @@ public class CharListProcessor {
     if (list.next == null)
       return list;
 
-    ListItem<Character> result =  reverseListInPlaceRecursively(list.next);
+    ListItem<Character> result = reverseListInPlaceRecursively(list.next);
     list.next = null;
     getLastElementList(result).next = list;
 
@@ -178,8 +188,44 @@ public class CharListProcessor {
   private static ListItem<Character> getLastElementList(ListItem<Character> list) {
     if (list.next == null)
       return list;
-      return getLastElementList(list.next);
+    return getLastElementList(list.next);
   }
 
+  public static ListItem<ListItem<Character>> readListOfChars(BufferedReader reader) {
+
+    int length;
+    try {
+      length = Integer.parseInt(reader.readLine());
+    } catch (IOException | NumberFormatException e) {
+      return null;
+    }
+    ListItem<ListItem<Character>> head = new ListItem<>();
+    if (length == 0)
+      return head;
+    ListItem<ListItem<Character>> tail = head;
+    ListItem<Character> innerItem = null;
+    //Laut vertrag gibt es jetzt nur richtige Buchstaben
+    for (int i = 0; i < length; i++) {
+      String read = "";
+      try {
+        read = reader.readLine();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+      //Wort als neue unterliste einfügen
+      for (char c : read.toCharArray()) {
+        var item = new ListItem<>(c, null);
+        if (tail.key == null) {
+          innerItem = tail.key = item;
+        } else {
+          assert innerItem != null;
+          innerItem = innerItem.next = item;
+        }
+      }
+      if (i < length - 1)
+        tail = tail.next = new ListItem<>();
+    }
+    return head;
+  }
 
 }
